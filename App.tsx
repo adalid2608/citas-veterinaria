@@ -12,7 +12,7 @@ import Formulario from './src/components/Formulario';
 
 const App = () => {
   //Los Hooks siempre van en la parte superior de los componentes
-  const [modalVisible, serModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
   console.log(modalVisible)
   return (
     <>
@@ -23,12 +23,13 @@ const App = () => {
         </Text>
         <Pressable 
           style={styles.btnCita}
-          onPress={ () => serModalVisible(true)}
+          onPress={ () => setModalVisible(true)}
         >
           <Text style={styles.txtBtn}>Nueva Cita</Text>
         </Pressable>
         <Formulario 
           modalVisible = {modalVisible}
+          setModalVisible = {setModalVisible}
         />
       </View>
     </>

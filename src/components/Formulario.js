@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView} from 'react-native'
+import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView, Pressable} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 
-const Formulario = ({modalVisible}) => {
+const Formulario = ({modalVisible, setModalVisible}) => {
     const [paciente, setPaciente] = useState('')
     const [propietario, setPropietario] = useState('')
     const [email, setEmail] = useState('')
     const [telefono, setTelefono] = useState('')
+    const [fecha, setFecha] = useState(new Date())
     const [sintomas, setSintomas] = useState('')
 
 
@@ -20,6 +21,12 @@ const Formulario = ({modalVisible}) => {
                     <Text style={styles.titulo}>Nueva {''}
                         <Text style={styles.tituloBold}>Cita</Text>
                     </Text>
+                    <Pressable
+                        style={styles.btnCancelar}
+                        onPress={ () => setModalVisible(false)}
+                    >
+                        <Text style={styles.txtCancelar}>X Cancelar</Text>
+                    </Pressable>
                     <View style={styles.campo}>
                         <Text style={styles.label}>Nombre del Paciente</Text>
                         <TextInput 
@@ -65,7 +72,15 @@ const Formulario = ({modalVisible}) => {
                     </View>
                     <View style={styles.campo}>
                         <Text style={styles.label}>Telefono del Propietario</Text>
-                        
+                        <View style={styles.fechaContenedor}>
+                            <DatePicker
+                                date={fecha}
+                                locale='es'
+                                mode='date'
+                                onDateChange={(date)=> setFecha(date)}
+                                
+                            />
+                        </View>
                     </View>
                     <View style={styles.campo}>
                         <Text style={styles.label}>Sintomas</Text>
@@ -79,6 +94,11 @@ const Formulario = ({modalVisible}) => {
                             numberOfLines={4}
                         />
                     </View>
+                    <Pressable
+                        style={styles.btnAgregar}
+                    >
+                        <Text style={styles.txtAgregar}>Agregar Paciente</Text>
+                    </Pressable>
                 </ScrollView>
             </View>
         </Modal>
@@ -88,7 +108,7 @@ const Formulario = ({modalVisible}) => {
 const styles = StyleSheet.create({
     containerModal: {
         backgroundColor: '#6D28D9',
-        flex: 1
+        flex: 1,
     },
     titulo: {
         textAlign: 'center',
@@ -100,6 +120,22 @@ const styles = StyleSheet.create({
     tituloBold: {
         fontWeight: '900',
         color: '#FFF',
+    },
+    btnCancelar: {
+        marginVertical: 30,
+        backgroundColor: '#ff1100',
+        marginHorizontal: 30,
+        padding: 15,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#FFF'
+    },
+    txtCancelar: {
+        color: '#FFF',
+        textAlign: 'center',
+        fontWeight: '700',
+        fontSize: 16,
+        textTransform: 'uppercase'
     },
     campo: {
         marginTop: 10,
@@ -118,7 +154,32 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     sintomasInput: {
-        height: 100
-    }
+        height: 100,
+        marginBottom: 40
+    },
+    fechaContenedor: {
+        backgroundColor: '#FFF',
+        width: '100%',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    btnAgregar: {
+        marginTop: 10,
+        marginBottom: 50,
+        backgroundColor: '#F59E0B',
+        marginHorizontal: 30,
+        paddingVertical: 15,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#ffffff'
+    },
+    txtAgregar: {
+        color: '#FFF',
+        textAlign: 'center',
+        fontWeight: '700',
+        fontSize: 16,
+        textTransform: 'uppercase'
+    },
+    
 });
 export default Formulario
