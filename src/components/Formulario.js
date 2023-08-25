@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView} from 'react-native'
+import DatePicker from 'react-native-date-picker'
 
 const Formulario = ({modalVisible}) => {
     const [paciente, setPaciente] = useState('')
@@ -61,6 +62,10 @@ const Formulario = ({modalVisible}) => {
                             onChangeText={setTelefono}
                             maxLength={10}
                         />
+                    </View>
+                    <View style={styles.campo}>
+                        <Text style={styles.label}>Telefono del Propietario</Text>
+                        
                     </View>
                     <View style={styles.campo}>
                         <Text style={styles.label}>Sintomas</Text>
