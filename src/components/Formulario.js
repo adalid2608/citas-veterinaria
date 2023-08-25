@@ -1,24 +1,80 @@
-import React from 'react'
-import {Modal, Text, View, StyleSheet, TextInput,} from 'react-native'
+import React, { useState } from 'react'
+import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView} from 'react-native'
 
 const Formulario = ({modalVisible}) => {
+    const [paciente, setPaciente] = useState('')
+    const [propietario, setPropietario] = useState('')
+    const [email, setEmail] = useState('')
+    const [telefono, setTelefono] = useState('')
+    const [sintomas, setSintomas] = useState('')
+
+
     return (
         <Modal 
             animationType='slide' 
             visible={modalVisible}
-        >
+        > 
             <View style={styles.containerModal}>
-                <Text style={styles.titulo}>Nueva {''}
-                    <Text style={styles.tituloBold}>Cita</Text>
-                </Text>
-                <View style={styles.campo}>
-                    <Text style={styles.label}>Nombre del Paciente</Text>
-                    <TextInput 
-                        style={styles.input}
-                        placeholder='Nombre del Paciente'
-                        placeholderTextColor={'#a5a5a5'}
-                    />
-                </View>
+                <ScrollView>
+                    <Text style={styles.titulo}>Nueva {''}
+                        <Text style={styles.tituloBold}>Cita</Text>
+                    </Text>
+                    <View style={styles.campo}>
+                        <Text style={styles.label}>Nombre del Paciente</Text>
+                        <TextInput 
+                            style={styles.input}
+                            placeholder='Nombre del Paciente'
+                            placeholderTextColor={'#a5a5a5'}
+                            value={paciente}
+                            onChangeText={setPaciente}
+                        />
+                    </View>
+                    <View style={styles.campo}>
+                        <Text style={styles.label}>Nombre del Propietario</Text>
+                        <TextInput 
+                            style={styles.input}
+                            placeholder='Nombre del Propietario'
+                            placeholderTextColor={'#a5a5a5'}
+                            value={propietario}
+                            onChangeText={setPropietario}
+                        />
+                    </View>
+                    <View style={styles.campo}>
+                        <Text style={styles.label}>Email del Propietario</Text>
+                        <TextInput 
+                            style={styles.input}
+                            placeholder='Email del Propietario'
+                            placeholderTextColor={'#a5a5a5'}
+                            keyboardType='email-address'
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                    </View>
+                    <View style={styles.campo}>
+                        <Text style={styles.label}>Telefono del Propietario</Text>
+                        <TextInput 
+                            style={styles.input}
+                            placeholder='Telefono del Propietario'
+                            placeholderTextColor={'#a5a5a5'}
+                            keyboardType='number-pad'
+                            value={telefono}
+                            onChangeText={setTelefono}
+                            maxLength={10}
+                        />
+                    </View>
+                    <View style={styles.campo}>
+                        <Text style={styles.label}>Sintomas</Text>
+                        <TextInput 
+                            style={[styles.input, styles.sintomasInput]}
+                            placeholder='Sintomas del Paciente'
+                            placeholderTextColor={'#a5a5a5'}
+                            value={sintomas}
+                            onChangeText={setSintomas}
+                            multiline={true}
+                            numberOfLines={4}
+                        />
+                    </View>
+                </ScrollView>
             </View>
         </Modal>
     )
@@ -41,23 +97,23 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
     campo: {
-        marginTop: 40,
+        marginTop: 10,
         marginHorizontal: 30,
-        marginBottom: 100
     },
     label: {
         color: '#FFF',
         marginBottom: 10,
-        marginTop: 15,
+        marginTop: 5,
         fontSize: 20,
         fontWeight: '600'
     },
     input: {
         backgroundColor: '#FFF',
-        padding: 15,
+        padding: 10,
         borderRadius: 10,
-        marginBottom: 15
     },
-
+    sintomasInput: {
+        height: 100
+    }
 });
 export default Formulario
