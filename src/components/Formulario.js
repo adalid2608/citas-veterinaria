@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView, Pressable} from 'react-native'
+import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView, Pressable, Alert} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 
-const Formulario = ({modalVisible, setModalVisible}) => {
+const Formulario = ({modalVisible, setModalVisible, pacientes,setPacientes}) => {
     const [paciente, setPaciente] = useState('')
     const [propietario, setPropietario] = useState('')
     const [email, setEmail] = useState('')
@@ -10,6 +10,36 @@ const Formulario = ({modalVisible, setModalVisible}) => {
     const [fecha, setFecha] = useState(new Date())
     const [sintomas, setSintomas] = useState('')
 
+    const nuevaCita = () => {
+        //validacion
+        if([paciente, propietario, email, telefono, fecha, sintomas].includes('')){
+            Alert.alert(
+                'Error',
+                'Todos los campos son Obligatorios',
+            )
+            return
+        }
+        const nuevoPaciente = {
+            id: Date.now(),
+            paciente,
+            propietario,
+            email,
+            telefono,
+            fecha,
+            sintomas
+        }
+        setPacientes([...pacientes, nuevoPaciente])
+        setModalVisible(!modalVisible)
+
+        setPaciente('')
+        setPropietario('')
+        setEmail('')
+        setTelefono('')
+        setFecha(new Date())
+        setSintomas('')
+        console.log(nuevoPaciente)
+        
+    }
 
     return (
         <Modal 
@@ -23,7 +53,7 @@ const Formulario = ({modalVisible, setModalVisible}) => {
                     </Text>
                     <Pressable
                         style={styles.btnCancelar}
-                        onPress={ () => setModalVisible(false)}
+                        onPress={ () => setModalVisible(!modalVisible)}
                     >
                         <Text style={styles.txtCancelar}>X Cancelar</Text>
                     </Pressable>
@@ -71,7 +101,7 @@ const Formulario = ({modalVisible, setModalVisible}) => {
                         />
                     </View>
                     <View style={styles.campo}>
-                        <Text style={styles.label}>Telefono del Propietario</Text>
+                        <Text style={styles.label}>Fecha de la Cita</Text>
                         <View style={styles.fechaContenedor}>
                             <DatePicker
                                 date={fecha}
@@ -96,6 +126,7 @@ const Formulario = ({modalVisible, setModalVisible}) => {
                     </View>
                     <Pressable
                         style={styles.btnAgregar}
+                        onPress={nuevaCita}
                     >
                         <Text style={styles.txtAgregar}>Agregar Paciente</Text>
                     </Pressable>
@@ -180,6 +211,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textTransform: 'uppercase'
     },
-    
+
 });
 export default Formulario

@@ -6,14 +6,17 @@ import {
   View,
   Pressable,
   Modal,
+  FlatList
 } from 'react-native';
 
 import Formulario from './src/components/Formulario';
+import Pacientes from './src/components/Pacientes';
 
 const App = () => {
   //Los Hooks siempre van en la parte superior de los componentes
   const [modalVisible, setModalVisible] = useState(false)
-  console.log(modalVisible)
+  const [pacientes, setPacientes] = useState([])
+
   return (
     <>
       <View style={styles.container}>
@@ -23,13 +26,31 @@ const App = () => {
         </Text>
         <Pressable 
           style={styles.btnCita}
-          onPress={ () => setModalVisible(true)}
+          onPress={ () => setModalVisible(!modalVisible)}
         >
           <Text style={styles.txtBtn}>Nueva Cita</Text>
         </Pressable>
+        {pacientes.length === 0 ? 
+          <Text style={styles.pacientes}>No hay pacientes aún</Text> :
+          <FlatList
+            data={pacientes}
+            keyExtractor={(item)=>item.id}
+            renderItem={({item}) => {
+              return(
+                <>
+                  <Pacientes
+                    item={item}
+                  />
+                </>
+              )
+            }}
+          />
+        }
         <Formulario 
           modalVisible = {modalVisible}
           setModalVisible = {setModalVisible}
+          pacientes = {pacientes}
+          setPacientes = {setPacientes}
         />
       </View>
     </>
@@ -65,7 +86,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '900',
     textTransform: 'uppercase'
-  }
+  },
+  pacientes: {
+    marginTop: 40,
+    textAlign: 'center',
+    color: '#000',
+    fontSize: 24,
+    fontWeight: '600'
+  },
 });
 
 export default App;
