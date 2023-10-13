@@ -1,14 +1,37 @@
-import React, { useState } from 'react'
-import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView, Pressable, Alert} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import {Modal, Text, View, StyleSheet, TextInput,ScrollView, SafeAreaView, Pressable, Alert, NativeModules} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 
-const Formulario = ({modalVisible, setModalVisible, pacientes,setPacientes}) => {
+const Formulario = ({
+    modalVisible,
+    cerrarModal,
+    pacientes,
+    setPacientes, 
+    paciente:pacienteObj, 
+    setPaciente:setPacienteApp }) => {
+
     const [paciente, setPaciente] = useState('')
+    const [id, setId] = useState('')
     const [propietario, setPropietario] = useState('')
     const [email, setEmail] = useState('')
     const [telefono, setTelefono] = useState('')
     const [fecha, setFecha] = useState(new Date())
     const [sintomas, setSintomas] = useState('')
+
+    //useEffect ( () => {
+        //console.log('el componente esta listo')
+    //},[])
+    useEffect(() => {
+        if(Object.keys(pacienteObj).length > 0) {
+            setId(pacienteObj.id)
+            setPaciente(pacienteObj.paciente)
+            setPropietario(pacienteObj.propietario)
+            setEmail(pacienteObj.email)
+            setTelefono(pacienteObj.telefono)
+            setFecha(pacienteObj.fecha)
+            setSintomas(pacienteObj.sintomas)
+        }
+    },[pacienteObj])
 
     const nuevaCita = () => {
         //validacion
@@ -20,7 +43,6 @@ const Formulario = ({modalVisible, setModalVisible, pacientes,setPacientes}) => 
             return
         }
         const nuevoPaciente = {
-            id: Date.now(),
             paciente,
             propietario,
             email,
@@ -28,32 +50,54 @@ const Formulario = ({modalVisible, setModalVisible, pacientes,setPacientes}) => 
             fecha,
             sintomas
         }
-        setPacientes([...pacientes, nuevoPaciente])
-        setModalVisible(!modalVisible)
-
+        //Revisar si es un registro nuevo o es edicion
+        if(id) {
+            //Editar Registro
+            nuevoPaciente.id = id
+            const pacientesActualizados = pacientes.map(pacienteState => 
+                pacienteState.id === nuevoPaciente.id ? nuevoPaciente 
+                :pacienteState)
+            
+                setPacientes(pacientesActualizados)
+        }else {
+            //Registrar un nuevo paciente
+            nuevoPaciente.id = Date.now()
+            setPacientes([...pacientes, nuevoPaciente])
+            setPacienteApp({})
+        }
+        cerrarModal()
+        setId('')
         setPaciente('')
         setPropietario('')
         setEmail('')
         setTelefono('')
         setFecha(new Date())
         setSintomas('')
-        console.log(nuevoPaciente)
-        
     }
 
     return (
         <Modal 
-            animationType='slide' 
+            animationType='fade' 
             visible={modalVisible}
         > 
             <View style={styles.containerModal}>
                 <ScrollView>
-                    <Text style={styles.titulo}>Nueva {''}
+                    <Text style={styles.titulo}>{pacienteObj.id ? 'Editar': 'Nueva'} {''}
                         <Text style={styles.tituloBold}>Cita</Text>
                     </Text>
                     <Pressable
                         style={styles.btnCancelar}
-                        onPress={ () => setModalVisible(!modalVisible)}
+                        onPress={ () => {
+                            cerrarModal()
+                            setPacienteApp({})
+                            setId('')
+                            setPaciente('')
+                            setPropietario('')
+                            setEmail('')
+                            setTelefono('')
+                            setFecha(new Date())
+                            setSintomas('')
+                        }}
                     >
                         <Text style={styles.txtCancelar}>X Cancelar</Text>
                     </Pressable>
@@ -128,7 +172,7 @@ const Formulario = ({modalVisible, setModalVisible, pacientes,setPacientes}) => 
                         style={styles.btnAgregar}
                         onPress={nuevaCita}
                     >
-                        <Text style={styles.txtAgregar}>Agregar Paciente</Text>
+                        <Text style={styles.txtAgregar}>{pacienteObj.id ? 'Editar ' : 'Agregar '}Paciente</Text>
                     </Pressable>
                 </ScrollView>
             </View>

@@ -6,17 +6,42 @@ import {
   View,
   Pressable,
   Modal,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 
 import Formulario from './src/components/Formulario';
 import Pacientes from './src/components/Pacientes';
+import Informacion from './src/components/Informacion';
 
 const App = () => {
   //Los Hooks siempre van en la parte superior de los componentes
   const [modalVisible, setModalVisible] = useState(false)
   const [pacientes, setPacientes] = useState([])
+  const [paciente, setPaciente] = useState({})
+  const [modalPaciente, setModalPaciente] = useState(false)
 
+  const pacienteEditar = id => {
+      const pacienteEditar = pacientes.filter(paciente => paciente.id === id)
+      setPaciente(pacienteEditar[0])}
+      
+  const pacienteEliminar = id => {
+    Alert.alert(
+      '¿Deseas elimiar este paciente?',
+      'Un paciente eliminado no se puede recuperar',
+      [
+        {text: 'Cancelar'},
+        {text: 'Si, eliminar', onPress: () => {
+          const pacientesActualizados = pacientes.filter(pacientesState => pacientesState.id !== id)
+          setPacientes(pacientesActualizados)
+        }}
+      ]
+    )
+  }
+
+  const cerrarModal = () => {
+    setModalVisible(false)
+  }
   return (
     <>
       <View style={styles.container}>
@@ -41,18 +66,36 @@ const App = () => {
                 <>
                   <Pacientes
                     item={item}
+                    setModalVisible={setModalVisible}
+                    pacienteEditar={pacienteEditar}
+                    pacienteEliminar={pacienteEliminar}
+                    setModalPaciente={setModalPaciente}
+                    setPaciente={setPaciente}
                   />
                 </>
               )
             }}
           />
         }
-        <Formulario 
-          modalVisible = {modalVisible}
-          setModalVisible = {setModalVisible}
-          pacientes = {pacientes}
-          setPacientes = {setPacientes}
-        />
+        {modalVisible && (
+          <Formulario 
+            cerrarModal={cerrarModal}
+            pacientes = {pacientes}
+            setPacientes = {setPacientes}
+            paciente={paciente}
+            setPaciente={setPaciente}
+          />
+        )}
+        <Modal
+          visible={modalPaciente}
+          animationType='fade'
+        >
+          <Informacion
+            paciente={paciente}
+            setPaciente={setPaciente}
+            setModalPaciente={setModalPaciente}
+          />
+        </Modal>
       </View>
     </>
   );
@@ -60,7 +103,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#c0c0c0ff',
+    backgroundColor: '#e9e9e9ff',
     flex: 1
   },
   titulo: {
